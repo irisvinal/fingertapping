@@ -3,20 +3,16 @@ close all;
 clear;
 sca;
 
-
 fig = uifigure; 
-dd = uidropdown(fig, 'Items', {'practice','learning', 'recall'},...
-    'Value', 'practice'); 
+dd = uidropdown(fig,'Items',{'Select Option', 'Practice', 'Learning', 'Recall'},...
+                     'Value','Select Option',...
+                     'ValueChangedFcn',@(dd,event) selection(dd));                 
+
+% Create ValueChangedFcn callback:
+function selection(dd)
 value = dd.Value;
-
-if strcmp(value, 'practice')
-    execute practice
-elseif learning
-    execute learning
-elseif recall 
-    execute recall 
-end
-
+prompt = "Enter subject number: ";
+subjectNum = input(prompt)
 
 ListenChar(2);
 
@@ -39,21 +35,20 @@ black = BlackIndex(screenNumber);
 grey = white / 2;
 
 % Setup the screen background
-[window, windowRect] = PsychImaging('OpenWindow', screenNumber, grey);
-[window, windowRect] = Screen(screenNumber, 'OpenWindow', [], [0 0 500 400]);
+[window,windowRect] = Screen(screenNumber, 'OpenWindow',[],[0 0 500 400]);
+%[window, windowRect] = PsychImaging('OpenWindow', screenNumber, grey);
 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
 [screenXpixels, screenYpixels] = Screen('WindowSize', window);
 [xCenter, yCenter] = RectCenter(windowRect);
 
-HideCursor;
+%HideCursor;
 
-if strcmp(type, 'practice')
-end 
 
-%--------------------------------------------------------------------------
+if strcmp(value, 'Practice')
+    %code for intructions + practice trials
+    %--------------------------------------------------------------------------
 %                         Present Intructions
 %--------------------------------------------------------------------------
-
 
 line1 = 'In this task, you will tap keys on the keyboard in specific sequences.';
 line2 = '\n These sequences all use the numbers 1 to 4.';
@@ -62,15 +57,15 @@ line4 = '\n and use your little finger to press 1, your ring finger to press 2,'
 line5 = '\n your middle finger to press 3, and your index finger to press 4.';
 line6 = '\n \n \n Press any key to continue.';
 
-Screen('TextSize', window, 40);
+Screen('TextSize', window, 20);
+%Screen('TextSize', window, 40);
 DrawFormattedText(window, [line1 line2 line3 line4 line5 line6 ],...
     'center', screenYpixels * 0.25, white);
 Screen('Flip', window);
 
-
 %wait for key press
 KbStrokeWait;
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
@@ -89,14 +84,14 @@ DrawFormattedText(window, 'Press 4 with your index finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
             return
         end
         
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
 if keyCode(Key1)
     response = 1;
 elseif keyCode(Key2)
@@ -114,7 +109,7 @@ DrawFormattedText(window, 'Press 4 with your index finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
     if keyCode(Key1)
         response = 1;
     elseif keyCode(Key2)
@@ -139,14 +134,14 @@ DrawFormattedText(window, 'Now; press 3 with your middle finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
             return
         end
         
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
 if keyCode(Key1)
     response = 1;
 elseif keyCode(Key2)
@@ -164,7 +159,7 @@ DrawFormattedText(window, 'Now, press 3 with your middle finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
     if keyCode(Key1)
         response = 1;
     elseif keyCode(Key2)
@@ -179,7 +174,6 @@ end
 
 %wakeup=WaitSecs(5); % enforce 5 second break after key is pressed
 
-
 Screen('TextSize', window, 24);
 DrawFormattedText(window, [line1 line2 line3 line4 line5],...
     'center', screenYpixels * 0.25-100, white);
@@ -189,14 +183,14 @@ DrawFormattedText(window, 'Now; press 2 with your ring finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
             return
         end
         
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
 if keyCode(Key1)
     response = 1;
 elseif keyCode(Key2)
@@ -214,7 +208,7 @@ DrawFormattedText(window, 'Now, press 2 with your ring finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
     if keyCode(Key1)
         response = 1;
     elseif keyCode(Key2)
@@ -229,7 +223,6 @@ end
 
 %wakeup=WaitSecs(5); % enforce 5 second break after key is pressed
 
-
 Screen('TextSize', window, 24);
 DrawFormattedText(window, [line1 line2 line3 line4 line5],...
     'center', screenYpixels * 0.25-100, white);
@@ -239,14 +232,13 @@ DrawFormattedText(window, 'Now, press 1 with your little finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
             return
         end
-        
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
 if keyCode(Key1)
     response = 1;
 elseif keyCode(Key2)
@@ -264,7 +256,7 @@ DrawFormattedText(window, 'Now, press 1 with your little finger.', 'center',...
     'center', black);
 Screen('Flip', window);
 
-[~, keyCode, deltaSecs] = KbStrokeWait;
+[secs, keyCode, deltaSecs] = KbStrokeWait;
     if keyCode(Key1)
         response = 1;
     elseif keyCode(Key2)
@@ -279,14 +271,10 @@ end
 
 %wakeup=WaitSecs(5); % enforce 5 second break after key is pressed
 
-%% 
-%% 
-
 
 %--------------------------------------------------------------------------
 %                           Practice Trials
 %--------------------------------------------------------------------------
-
 
 line1 = 'You will now receive two practice trials.';
 line2 = '\n Tap the sequences that appear on the top of the screen';
@@ -300,10 +288,9 @@ DrawFormattedText(window, [line1 line2 line3 line4 line5 line6],...
     'center', screenYpixels * 0.25, white);
 Screen('Flip', window);
 
-
 %wait for key press
 KbStrokeWait;
-[keyIsDown,Secs, keyCode] = KbCheck;
+[keyIsDown,secs, keyCode] = KbCheck;
         if keyCode(escKey)
             ShowCursor;
             sca;
@@ -314,35 +301,34 @@ KbStrokeWait;
 
 
 % load number sequences 
-numseq = readtable('/Users/iris/MATLAB-Drive/numberseq.csv');
-practiceTrials = table2array(numseq(:,1:2)); %set first 2 rows as trial sequences
+%numseq = readtable('/Users/taylorly/Lewis_Lab/SSTIM_Tasks/FingerTapping/fingerTappingNumbers.csv');
+%practiceTrials = table2array(numseq(:,1:2)); %set first 2 rows as trial sequences
 
-KbQueueCreate; 
+practicesequence = readtable('/Users/taylorly/Lewis_Lab/SSTIM_Tasks/FingerTapping/practicesequence.csv');
+practicesequence = table2array(practicesequence);
 
-
-for ptrial = 1:2
-    
-    KbQueueStart;
-
-    %randomize order of sequences
-    idx=randperm(length(practiceTrials));
-    seqOrder=practiceTrials(idx);
-    
-    for i = 1:length(practiceTrials(:,ptrial))
-        seq = practiceTrials(:,ptrial);
-        
-        %set up 30 second timer 
-        wait_time = 30;
-        interval = 1;
+%set up 30 second timer 
+        wait_time = 10; 
         time_passed = 0;
-        while time_passed < wait_time
-            pause(interval)
-            time_passed = time_passed + interval;
+        startSecs = GetSecs;
+        endTime = startSecs + wait_time;
+
+        %initialize response recording
+        response_array = [];
+        all_times = [];
+
+        KbQueueCreate;
+        KbQueueStart;
+
+        while GetSecs < endTime
+            time_passed = GetSecs - startSecs;
             time_remaining = wait_time - time_passed;
             numberString = num2str(time_remaining);
 
-            line1 = sprintf('%s \n', num2str(seqOrder(i)));
-        
+            seqString = num2str(practicesequence);
+
+            line1 = sprintf('%c - %c - %c - %c - %c \n', seqString(1), seqString(2), seqString(3), seqString(4), seqString(5));
+
             %display sequence and countdown timer
             Screen('TextSize', window, 60);
             DrawFormattedText(window, line1,...
@@ -350,16 +336,52 @@ for ptrial = 1:2
             DrawFormattedText(window, numberString, screenXpixels - 60, screenYpixels - 25, black);
             Screen('Flip', window);
 
-            KbQueueStop;
+            %record responses
+            [pressed, firstPress]=KbQueueCheck;
+            if pressed
+                response = KbName(min(find(firstPress)));
+                responseTime = firstPress(find(firstPress));
+                if isempty(response_array)
+                    response_array = response(1);
+                    all_times = responseTime - startSecs;                 
+                else
+                    response_array(end+1) = response(1);
+                    all_times(end+1) = responseTime - startSecs;
+                end
+                
+                if firstPress == escKey
+                    break;
+                    ShowCursor;
+                    sca;
+                end
+
+            end
+
         end
+        KbQueueStop;
+
+        writematrix(response_array, 'response_array.txt')
+        writematrix(all_times, 'all_times.txt')
+
+
+  %wait for key press
+  KbStrokeWait;
+  [keyIsDown,secs, keyCode] = KbCheck;
+    if keyCode(escKey)
+        ShowCursor;
+        sca; 
+        return
     end
 
-end
-
-KbQueueStop;
+    ListenChar(0);
+sca
+    
+elseif strcmp(value, 'Learning')
+    % code for learning trials
 
 DrawFormattedText(window, 'Good job! Press any key to begin the real experiment.', 'center',...
     'center', black);
+Screen('Flip', window);
 
 
 %wait for key press
@@ -371,25 +393,93 @@ KbStrokeWait;
         return
     end
 
- 
-if strcmp(value, 'learning')
-end 
-%-------------------------------------------------------------%
-%----------------------LEARNING PHASE-------------------------%
-%-------------------------------------------------------------%
-
-line1 = 'Remember to type each sequence as quickly and accurately as you can';
-line2 = '\n Type them as many times as you can within the time limit';
-line3 = '\n Press ENTER with your right hand when you are ready';
-line4 = '\n Make sure your left hand is already in position.';
-line5 = '\n Start tapping as soon as you see the sequence';
+    line1 = 'Remember to type each sequence as quickly and accurately as you can';
+    line2 = '\n Type them as many times as you can within the time limit';
+    line3 = '\n Press ENTER with your right hand when you are ready';
+    line4 = '\n Make sure your left hand is already in position.';
+    line5 = '\n Start tapping as soon as you see the sequence';
 
 Screen('TextSize', window, 40);
 DrawFormattedText(window, [line1 line2 line3 line4 line5],...
-    'center', screenYpixels * 0.25, white);
+    'center', screenYpixels * 0.25, black);
 Screen('Flip', window);
 
-HideCursor;
+keysOfInterest=zeros(1,256);
+keysOfInterest(KbName('Return'))=1;
+KbQueueCreate([],keysOfInterest);
+KbQueueStart;
+timeSecs = KbQueueWait;
+KbQueueRelease;
+
+%load in and begin learning trials
+
+%numseq = readtable('/Users/taylorly/Lewis_Lab/SSTIM_Tasks/FingerTapping/fingerTappingNumbers.csv');
+%learningTrials = table2array(numseq(:,3)); %3rd row as learning sequences
+
+practicesequence = readtable('/Users/taylorly/Lewis_Lab/SSTIM_Tasks/FingerTapping/practicesequence.csv');
+practicesequence = table2array(practicesequence);
+
+%set up 30 second timer 
+        wait_time = 10; 
+        time_passed = 0;
+        startSecs = GetSecs;
+        endTime = startSecs + wait_time;
+
+        %initialize response recording
+        response_array = [];
+        all_times = [];
+
+        KbQueueCreate;
+        KbQueueStart;
+
+        while GetSecs < endTime
+            time_passed = GetSecs - startSecs;
+            time_remaining = wait_time - time_passed;
+            numberString = num2str(time_remaining);
+
+            seqString = num2str(practicesequence);
+
+            line1 = sprintf('%c - %c - %c - %c - %c \n', seqString(1), seqString(2), seqString(3), seqString(4), seqString(5));
+
+            %display sequence and countdown timer
+            Screen('TextSize', window, 60);
+            DrawFormattedText(window, line1,...
+            'center', 'center', black);
+            DrawFormattedText(window, numberString, screenXpixels - 60, screenYpixels - 25, black);
+            Screen('Flip', window);
+
+            %record responses
+            [pressed, firstPress]=KbQueueCheck;
+            if pressed
+                response = KbName(min(find(firstPress)));
+                responseTime = firstPress(find(firstPress));
+                if isempty(response_array)
+                    response_array = response(1);
+                    all_times = responseTime - startSecs;                 
+                else
+                    response_array(end+1) = response(1);
+                    all_times(end+1) = responseTime - startSecs;
+                end
+                
+                if firstPress == escKey
+                    break;
+                    ShowCursor;
+                    sca;
+                end
+
+            end
+
+        end
+        KbQueueStop;
+
+        %writematrix(response_array, sprintf('keyResponses_subject_%d.txt', subjectNum))
+        %writematrix(all_times, sprintf('responseTime_subject_%d.txt', subjectNum))
+
+        %responsefile = sprintf('keyResponses_subject%d.txt',subjectNum);
+        %timefile = sprintf('responseTime_subject%d.txt', subjectNum);
+
+        writematrix(response_array, sprintf('keyResponses_subject%d.txt',subjectNum))
+        writematrix(all_times, sprintf('responseTime_subject%d.txt', subjectNum))
 
 %wait for key press
 KbStrokeWait;
@@ -399,106 +489,18 @@ KbStrokeWait;
             sca;
             return
         end
-  
-%enforce a wait of 2 seconds% 
-%wake =  4321 Waitsecs(2);
-% 
 
-numseq = readtable('/Users/iris/MATLAB-Drive/numberseq.csv');
-learningTrials = table2array(numseq(:,3));
+ListenChar(0);
+sca
 
-KbQueueCreate;
 
-for ltrial = 1
 
-    KbQueueStart;
 
-    %randomize order of sequences
-    idx=randperm(length(learningTrials));
-    seqorder=learningTrials(idx);
     
-    for i = 1:length(learningTrials(:,ltrial))
-        seq = learningTrials(:,ltrial);
-        
-        wait_time = 30;
-        time_passed = 0;
-        startSecs = GetSecs;
-        endTime = startSecs + wait_time;
-        all_times = [];
-        response_array = [];
-        
-
-
-        %set up 30 second timer
-        while GetSecs < endTime
-            time_passed = GetSecs - startSecs;
-            time_remaining = wait_time - time_passed;
-            numberString = num2str(time_remaining);
-
-            seqString = num2str(seqorder(i));
-
-
-            line1 = sprintf('%c - %c - %c - %c - %c \n', seqString(1), seqString(2), seqString(3), seqString(4));
-        
-            %display sequence and timer
-            Screen('TextSize', window, 60);
-            DrawFormattedText(window, line1,...
-            'center', 'center', black);
-            DrawFormattedText(window, numberString, screenXpixels - 60, screenYpixels - 25, black);
-            Screen('Flip', window);
-           
-        [keyIsDown, responseTime, keyCode] = KbCheck; 
-        if keyIsDown
-            response = find(keyCode, 1); 
-            response = KbName(response); 
-            if length(response_array) == 0 
-                response_array = response(1); 
-                all_times = responseTime - startSecs; 
-            else 
-                response_array(end + 1) = response(1); 
-                all_times(end+1) = responseTime - startSecs; 
-            end
-        end 
-                KbQueueStop; 
-
-            if keyCode == escKey 
-                break;             
-            end 
-    end
+elseif strcmp(value, 'Recall')
+    %code for recall trials
     
+
 end
-end 
 
-
-save seqorder.mat
-
-
-ListenChar(0); 
-
-if strcmp(type, 'recall')
-end 
- 
-%-------------------------------------------------------------%
-%-----------------------RECALL PHASE--------------------------% 
-%-------------------------------------------------------------%
-
-writetable(table, sprintf('subject_%d.csv', subjectNum))
-
-
-     
-
-
-
-
-
-   
-
- 
-
-
-
-
-
-
- 
-
+end
